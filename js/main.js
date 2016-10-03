@@ -13,7 +13,7 @@ var clock = new THREE.Clock();
 var mouseCoords = new THREE.Vector2();
 var raycaster = new THREE.Raycaster();
 var ballMaterial = new THREE.MeshPhongMaterial({
-	color: 0xff0000
+	color: 0x0055ff
 });
 
 //physics variables
@@ -62,7 +62,7 @@ function initGraphics(){
 	controls = new THREE.OrbitControls(camera);
 	controls.target.y = 2;
 	renderer = new THREE.WebGLRenderer();
-	renderer.setClearColor(0x66ccff);
+	renderer.setClearColor(0x8ed7ff);
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(window.innerWidth,window.innerHeight);
 	renderer.shadowMap.enabled = true;
@@ -114,7 +114,7 @@ function createObjects(){
 	//ground
 	pos.set(0,-0.5,0);
 	quat.set(0,0,0,1);
-	var ground = createParalellepipedWithPhysics(40,1,40,0,pos,quat,new THREE.MeshPhongMaterial({color:0xffffff}));
+	var ground = createParalellepipedWithPhysics(60,1,60,0,pos,quat,new THREE.MeshPhongMaterial({color:0xffffff}));
 	ground.receiveShadow = true;
 	textureLoader.load('textures/background.png',function(texture){
 		texture.wrapS = THREE.RepeatWrapping;
@@ -127,21 +127,22 @@ function createObjects(){
 	// Tower 1
 	var towerMass = 1000;
 	var towerHalfExtents = new THREE.Vector3( 2, 5, 2 );
+	var towerHalfExtents1 = new THREE.Vector3( 2, 6, 2 );
 	pos.set( -8, 5, 5 );
 	quat.set( 0, 0, 0, 1 );
-	createObject( towerMass, towerHalfExtents, pos, quat, createMaterial() );
+	createObject( towerMass, towerHalfExtents, pos, quat, createMaterial(0xfcd62a) );
 	// Tower 2
 	pos.set( 8, 5, 5 );
 	quat.set( 0, 0, 0, 1 );
-	createObject( towerMass, towerHalfExtents, pos, quat, createMaterial() );
+	createObject( towerMass, towerHalfExtents1, pos, quat, createMaterial(0x32c9b0) );
 
 	pos.set( -8, 5, -5 );
 	quat.set( 0, 0, 0, 1 );
-	createObject( towerMass, towerHalfExtents, pos, quat, createMaterial() );
+	createObject( towerMass, towerHalfExtents, pos, quat, createMaterial(0x42af21) );
 
 	pos.set( 8, 5, -5 );
 	quat.set( 0, 0, 0, 1 );
-	createObject( towerMass, towerHalfExtents, pos, quat, createMaterial() );
+	createObject( towerMass, towerHalfExtents1, pos, quat, createMaterial(0x4286f4) );
 
 	//Bridge
 	var bridgeMass = 100;
@@ -150,19 +151,19 @@ function createObjects(){
 	var bridgeHalfExtents1 = new THREE.Vector3( 1.5, 0.2, 7 );
 	pos.set( 0, 10.2, 5 );
 	quat.set( 0, 0, 0, 1 );
-	createObject( bridgeMass, bridgeHalfExtents, pos, quat, createMaterial() );
+	createObject( bridgeMass, bridgeHalfExtents, pos, quat, createMaterial(0xff9999) );
 
 	pos.set( 0, 10.2, -5 );
 	quat.set( 0, 0, 0, 1 );
-	createObject( bridgeMass, bridgeHalfExtents, pos, quat, createMaterial() );
+	createObject( bridgeMass, bridgeHalfExtents, pos, quat, createMaterial(0xff3333) );
 
 	pos.set( -8.3, 10.2, 0 );
 	quat.set( 0, 0, 0, 1 );
-	createObject( bridgeMass, bridgeHalfExtents1, pos, quat, createMaterial() );
+	createObject( bridgeMass, bridgeHalfExtents1, pos, quat, createMaterial(0xff6666) );
 
 	pos.set( 8.3, 10.2, 0 );
 	quat.set( 0, 0, 0, 1 );
-	createObject( bridgeMass, bridgeHalfExtents1, pos, quat, createMaterial() );
+	createObject( bridgeMass, bridgeHalfExtents1, pos, quat, createMaterial(0x800000) );
 
 	// Stones
 	var stoneMass = 120;
@@ -171,7 +172,7 @@ function createObjects(){
 	quat.set( 0, 0, 0, 1 );
 	for ( var i = 0; i < numStones; i++ ) {
 	    pos.set( 0, 2, 15 * ( 0.5 - i / ( numStones + 1 ) ) );
-	    createObject( stoneMass, stoneHalfExtents, pos, quat, createMaterial( 0x4a4a4a ) );
+	    createObject( stoneMass, stoneHalfExtents, pos, quat, createMaterial( 0x663300 ) );
 	}
 	// Mountain
 	// var mountainMass = 860;
@@ -279,6 +280,7 @@ function createMaterial(color){
 
 function initInput(){
 	window.addEventListener('mousedown',mouseEvent,false);
+	window.addEventListener('touchend',mouseEvent,false);
 }
 
 function mouseEvent(event){
@@ -391,6 +393,7 @@ function updatePhysics( deltaTime ) {
 				if ( breakable1 && !collided1 && maxImpulse > fractureImpulse ) {
 					var debris = convexBreaker.subdivideByImpact( threeObject1, impactPoint, impactNormal , 1, 2, 1.5 );
 					var numObjects = debris.length;
+
 					for ( var j = 0; j < numObjects; j++ ) {
 						createDebrisFromBreakableObject( debris[ j ] );
 					}

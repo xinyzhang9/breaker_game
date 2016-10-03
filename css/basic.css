@@ -1,7 +1,7 @@
-body {
-                color: #61443e;
+html body {
                 font-family:Monospace;
-                font-size:13px;
+                font-size:16px;
+                font-weight: bolder;
                 text-align:center;
                 background-color: #bfd1e5;
                 margin: 0px;
@@ -9,9 +9,8 @@ body {
             }
             #info {
                 position: absolute;
-                top: 0px; width: 100%;
+                color: white;
+                bottom: 20px; width: 100%;
                 padding: 5px;
-            }
-            a {
-                color: #a06851;
+                z-index: 1;
             }
